@@ -1,15 +1,8 @@
-import sys
 from mongodb_crud import getAllData, getSelectiveData
+from common_functions import printException
 
-# =========================================== COMMON FUNCTIONS : START ================================================== #
-def printException(func_name: str, error: str) -> None:
-    print(f'{func_name}: {error}')
-    _, __, exc_tb = sys.exc_info()
-    print(f'Line No: {exc_tb.tb_lineno}')
-# =========================================== COMMON FUNCTIONS : END ================================================== #
-
+# Description: Display data in structured format.
 def display_data(data):
-    # print("-------------------data------:",data)
     if data and type(data) == dict:
         data = [data]
     if data and type(data) == list:
@@ -21,7 +14,7 @@ def display_data(data):
     else:
         print("Data not found.")
 
-
+# Description: Main function.
 def main():
     while True:
         user_input = input("Enter a query (e.g., {'location': 'Thane'} or * (for all)): ")
