@@ -1,20 +1,16 @@
-import sys
-import json
 import pymongo
+from config import DATABASE_HOST, DATABASE_NAME
+from common_functions import printException
 
 
 # Database connector...
 def mongoDBConnector():
-    myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-    # myclient = pymongo.MongoClient("mongodb+srv://anand:anand@cluster0.z46hviw.mongodb.net/WeatherData?retryWrites=true&w=majority")
-    mydb = myclient["WeatherData"]
-    return mydb
-
-def printException(func_name: str, error: str) -> None:
-    print(f'{func_name}: {error}')
-    _, __, exc_tb = sys.exc_info()
-    print(f'Line No: {exc_tb.tb_lineno}')
-
+    try:
+        myclient = pymongo.MongoClient(DATABASE_HOST)
+        mydb = myclient[DATABASE_NAME]
+        return mydb
+    except (Exception) as error:
+        printException("mongoDBConnector()", error)
 
 def insertData(col_name: str, data: dict|list) -> bool:
     try:
@@ -42,7 +38,6 @@ def getAllData(col_name: str = "weather_data") -> bool|dict:
         printException("getAllData()", error)
         return False
 
-# With Filter...
 def getSelectiveData(col_name: str = "weather_data", request: dict = {}, output_param:dict = {}) -> bool|dict:
     try:
         connector = mongoDBConnector()
@@ -55,18 +50,3 @@ def getSelectiveData(col_name: str = "weather_data", request: dict = {}, output_
     except (Exception) as error:
         printException("getSelectiveData()", error)
         return False
-    
-
-
-if __name__ == '__main__':
-    # get_col_name = str(input("Enter collection name: "))
-    # get_document = input("Enter document(s): ")
-    # print("get_document : str: ",get_document)
-    # get_document = json.loads(get_document)
-    # print("get_document : dict: ",get_document)
-    # print("Insert status : ",insertData(get_col_name, get_document))
-
-
-    # print("all data------>",getAllData("new_cols"))
-    # user_input = 
-    print("all data------>",getSelectiveData("weather_data", {"name":"Solapur"},{"main.temp":1,"main.humidity":1}))
